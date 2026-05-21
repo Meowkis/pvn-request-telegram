@@ -36,9 +36,8 @@ inline_kb = InlineKeyboardMarkup(inline_keyboard=[
 
 reply_kb = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="Send Contact 📞", request_contact=True)],
-        [KeyboardButton(text="Send Location 📍", request_location=True)],
-        [KeyboardButton(text="Hide Keyboard ❌")]
+        [KeyboardButton(text="Авторизироваться", request_location=True)],
+        [KeyboardButton(text="Выйти")]
     ],
     resize_keyboard=True,
     one_time_keyboard=True
@@ -47,18 +46,16 @@ reply_kb = ReplyKeyboardMarkup(
 @router.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
     await message.answer(
-        f"Hello, {message.from_user.full_name}! Choose a keyboard type below:",
+        f"Здравствуйте, {message.from_user.full_name}! Выберите опцию:",
         reply_markup=reply_kb
     )
 
-@router.message(F.text == "Hide Keyboard ❌")
+@router.message(F.text == "Выйти")
 async def hide_keyboard(message: Message) -> None:
     from aiogram.types import ReplyKeyboardRemove
-    await message.answer("Keyboard hidden!", reply_markup=ReplyKeyboardRemove())
+    await ReplyKeyboardRemove()
 
-@router.message(F.text.in_({"Send Contact 📞", "Send Location 📍"}))
-async def handle_special_buttons(message: Message) -> None:
-    await message.answer(f"Thank you for sharing your {message.text.lower().replace('send ', '')}!")
+
 
 @router.message()
 async def send_inline_buttons(message: Message) -> None:
